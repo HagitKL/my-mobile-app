@@ -335,6 +335,30 @@
             font-size: 14px;
         }
 
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .data-entry {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            border-left: 3px solid #4facfe;
+            font-size: 12px;
+        }
+
+        .data-entry-date {
+            font-weight: bold;
+            color: #4facfe;
+        }
+
         @media (max-width: 480px) {
             .nav-tabs {
                 font-size: 11px;
@@ -370,6 +394,10 @@
 
         <!-- Morning Tab -->
         <div id="morning" class="tab-content active">
+            <div class="success-message" id="morningSuccess">
+                ✅ Morning data saved successfully!
+            </div>
+            
             <div class="reminder-card">
                 <h4>🌅 Morning Checklist</h4>
                 <p>Log your overnight recovery data and plan your day!</p>
@@ -401,6 +429,442 @@
                 <h3>📱 Garmin Data</h3>
                 <div class="time-input">
                     <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="experimentStart">
+                    </div>
+                    <div class="form-group">
+                        <label>Duration (days)</label>
+                        <input type="number" id="experimentDuration" placeholder="14">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Variables to Track</label>
+                    <textarea id="experimentVariables" placeholder="e.g., HRV, energy, cravings, weight" rows="2"></textarea>
+                </div>
+
+                <button class="btn-primary" onclick="startExperiment()">Start Experiment</button>
+
+                <div id="activeExperiments"></div>
+                <div id="completedExperiments"></div>
+            </div>
+
+            <!-- Data Tab -->
+            <div id="data" class="tab-content">
+                <div class="data-summary">
+                    <h3>📊 Your Nutrition Database</h3>
+                    <p>Export, analyze, and view your logged data.</p>
+                </div>
+
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalEntries">0</div>
+                        <div class="stat-label">Total Entries</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="averageEnergy">-</div>
+                        <div class="stat-label">Avg Energy</div>
+                    </div>
+                </div>
+
+                <button class="export-btn" onclick="exportToCSV()">📁 Export to CSV</button>
+                <button class="export-btn" onclick="clearAllData()" style="background: #dc3545;">🗑️ Clear All Data</button>
+
+                <div id="recentEntries"></div>
+            </div>
+
+            <!-- Scales Tab -->
+            <div id="scales" class="tab-content">
+                <div class="scale-reference">
+                    <h4>📊 Rating Scale Reference</h4>
+                    <ul>
+                        <li><strong>Energy (1-10):</strong> 1=Exhausted, 5=Neutral, 10=Peak energy</li>
+                        <li><strong>Hunger (1-10):</strong> 1=Not hungry, 5=Moderate, 10=Starving</li>
+                        <li><strong>Satiety (1-10):</strong> 1=Still hungry, 5=Satisfied, 10=Overfull</li>
+                        <li><strong>Digestive (1-10):</strong> 1=Very uncomfortable, 5=Normal, 10=Perfect</li>
+                        <li><strong>Training Quality (1-10):</strong> 1=Poor performance, 5=Average, 10=PR day</li>
+                    </ul>
+                </div>
+
+                <div class="reminder-card">
+                    <h4>💡 Usage Tips</h4>
+                    <p><strong>Consistency is key:</strong> Try to log at the same times each day for better pattern recognition.</p>
+                    <p><strong>Be honest:</strong> Accurate data leads to better insights about your unique responses.</p>
+                    <p><strong>Start simple:</strong> Don't try to log everything at once. Build the habit gradually.</p>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Initialize the app
+            let nutritionData = {
+                morning: [],
+                meals: [],
+                experiments: []
+            };
+
+            // Load existing data on startup
+            loadData();
+            updateCurrentDate();
+            updateDataSummary();
+
+            // Set current date
+            function updateCurrentDate() {
+                const today = new Date();
+                const options = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                };
+                document.getElementById('currentDate').textContent = today.toLocaleDateString('en-US', options);
+            }
+
+            // Tab switching
+            function showTab(tabName) {
+                // Hide all tabs
+                const tabs = document.querySelectorAll('.tab-content');
+                tabs.forEach(tab => tab.classList.remove('active'));
+                
+                const navTabs = document.querySelectorAll('.nav-tab');
+                navTabs.forEach(tab => tab.classList.remove('active'));
+                
+                // Show selected tab
+                document.getElementById(tabName).classList.add('active');
+                event.target.classList.add('active');
+                
+                // Update data when viewing certain tabs
+                if (tabName === 'data') {
+                    updateDataSummary();
+                    displayRecentEntries();
+                }
+                if (tabName === 'patterns') {
+                    displayPatterns();
+                }
+            }
+
+            // Rating button functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('rating-btn')) {
+                    const container = e.target.parentElement;
+                    const buttons = container.querySelectorAll('.rating-btn');
+                    
+                    // Remove selected class from all buttons in this group
+                    buttons.forEach(btn => btn.classList.remove('selected'));
+                    
+                    // Add selected class to clicked button
+                    e.target.classList.add('selected');
+                    
+                    // Store the value for form submission
+                    const field = container.getAttribute('data-field');
+                    const value = e.target.getAttribute('data-value');
+                    container.setAttribute('data-selected-value', value);
+                }
+            });
+
+            // Save morning data
+            function saveMorningData() {
+                const morningEntry = {
+                    date: new Date().toISOString().split('T')[0],
+                    timestamp: new Date().toISOString(),
+                    wakeTime: document.getElementById('wakeTime').value,
+                    morningEnergy: getRatingValue('morningEnergy'),
+                    hrv: document.getElementById('hrv').value,
+                    rhr: document.getElementById('rhr').value,
+                    sleepScore: document.getElementById('sleepScore').value,
+                    bodyBattery: document.getElementById('bodyBattery').value,
+                    stressLevel: document.getElementById('stressLevel').value,
+                    weight: document.getElementById('weight').value,
+                    trainingType: document.getElementById('trainingType').value
+                };
+
+                nutritionData.morning.push(morningEntry);
+                saveData();
+                showSuccess('morningSuccess');
+                clearMorningForm();
+            }
+
+            // Save meal data
+            function saveMealData() {
+                const mealEntry = {
+                    date: new Date().toISOString().split('T')[0],
+                    timestamp: new Date().toISOString(),
+                    meal1: {
+                        time: document.getElementById('meal1Time').value,
+                        hunger: getRatingValue('meal1Hunger'),
+                        food: document.getElementById('meal1Food').value,
+                        protein: document.getElementById('meal1Protein').value,
+                        carbs: document.getElementById('meal1Carbs').value,
+                        fat: document.getElementById('meal1Fat').value,
+                        fiber: document.getElementById('meal1Fiber').value,
+                        glucosePre: document.getElementById('meal1GlucosePre').value,
+                        glucose30: document.getElementById('meal1Glucose30').value,
+                        glucose60: document.getElementById('meal1Glucose60').value,
+                        glucose120: document.getElementById('meal1Glucose120').value,
+                        energy: getRatingValue('meal1Energy'),
+                        satiety: getRatingValue('meal1Satiety'),
+                        digestive: getRatingValue('meal1Digestive'),
+                        cravings: document.getElementById('meal1Cravings').value
+                    },
+                    meal2: {
+                        time: document.getElementById('meal2Time').value,
+                        hunger: getRatingValue('meal2Hunger'),
+                        food: document.getElementById('meal2Food').value,
+                        energy: getRatingValue('meal2Energy')
+                    },
+                    meal3: {
+                        time: document.getElementById('meal3Time').value,
+                        hunger: getRatingValue('meal3Hunger'),
+                        food: document.getElementById('meal3Food').value
+                    },
+                    exercise: {
+                        preWorkoutFuel: document.getElementById('preWorkoutFuel').value,
+                        performanceNotes: document.getElementById('performanceNotes').value,
+                        trainingQuality: getRatingValue('trainingQuality'),
+                        eodEnergy: getRatingValue('eodEnergy')
+                    }
+                };
+
+                nutritionData.meals.push(mealEntry);
+                saveData();
+                showSuccess('mealSuccess');
+                clearMealForm();
+            }
+
+            // Start experiment
+            function startExperiment() {
+                const experiment = {
+                    id: Date.now(),
+                    name: document.getElementById('experimentName').value,
+                    hypothesis: document.getElementById('experimentHypothesis').value,
+                    startDate: document.getElementById('experimentStart').value,
+                    duration: document.getElementById('experimentDuration').value,
+                    variables: document.getElementById('experimentVariables').value,
+                    status: 'active',
+                    createdAt: new Date().toISOString()
+                };
+
+                if (experiment.name && experiment.hypothesis) {
+                    nutritionData.experiments.push(experiment);
+                    saveData();
+                    showSuccess('experimentSuccess');
+                    clearExperimentForm();
+                    displayActiveExperiments();
+                }
+            }
+
+            // Helper functions
+            function getRatingValue(fieldName) {
+                const container = document.querySelector(`[data-field="${fieldName}"]`);
+                return container ? container.getAttribute('data-selected-value') : null;
+            }
+
+            function showSuccess(elementId) {
+                const element = document.getElementById(elementId);
+                element.style.display = 'block';
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 3000);
+            }
+
+            function clearMorningForm() {
+                document.getElementById('wakeTime').value = '';
+                document.getElementById('hrv').value = '';
+                document.getElementById('rhr').value = '';
+                document.getElementById('sleepScore').value = '';
+                document.getElementById('bodyBattery').value = '';
+                document.getElementById('stressLevel').value = '';
+                document.getElementById('weight').value = '';
+                document.getElementById('trainingType').value = '';
+                clearRatingButtons('morningEnergy');
+            }
+
+            function clearMealForm() {
+                // Clear all meal form fields
+                const mealInputs = document.querySelectorAll('#meals input, #meals textarea, #meals select');
+                mealInputs.forEach(input => input.value = '');
+                
+                // Clear all rating buttons in meals tab
+                const mealRatingGroups = ['meal1Hunger', 'meal1Energy', 'meal1Satiety', 'meal1Digestive', 
+                                         'meal2Hunger', 'meal2Energy', 'meal3Hunger', 'trainingQuality', 'eodEnergy'];
+                mealRatingGroups.forEach(group => clearRatingButtons(group));
+            }
+
+            function clearExperimentForm() {
+                document.getElementById('experimentName').value = '';
+                document.getElementById('experimentHypothesis').value = '';
+                document.getElementById('experimentStart').value = '';
+                document.getElementById('experimentDuration').value = '';
+                document.getElementById('experimentVariables').value = '';
+            }
+
+            function clearRatingButtons(fieldName) {
+                const container = document.querySelector(`[data-field="${fieldName}"]`);
+                if (container) {
+                    const buttons = container.querySelectorAll('.rating-btn');
+                    buttons.forEach(btn => btn.classList.remove('selected'));
+                    container.removeAttribute('data-selected-value');
+                }
+            }
+
+            // Data persistence functions
+            function saveData() {
+                try {
+                    localStorage.setItem('nutritionTrackerData', JSON.stringify(nutritionData));
+                } catch (error) {
+                    console.error('Error saving data:', error);
+                    alert('Error saving data. Your browser may not support data storage.');
+                }
+            }
+
+            function loadData() {
+                try {
+                    const saved = localStorage.getItem('nutritionTrackerData');
+                    if (saved) {
+                        nutritionData = JSON.parse(saved);
+                    }
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    nutritionData = { morning: [], meals: [], experiments: [] };
+                }
+            }
+
+            // Data display functions
+            function updateDataSummary() {
+                const totalEntries = nutritionData.morning.length + nutritionData.meals.length;
+                document.getElementById('totalEntries').textContent = totalEntries;
+
+                // Calculate average energy
+                let energyValues = [];
+                nutritionData.morning.forEach(entry => {
+                    if (entry.morningEnergy) energyValues.push(parseInt(entry.morningEnergy));
+                });
+                nutritionData.meals.forEach(entry => {
+                    if (entry.meal1?.energy) energyValues.push(parseInt(entry.meal1.energy));
+                    if (entry.meal2?.energy) energyValues.push(parseInt(entry.meal2.energy));
+                    if (entry.exercise?.eodEnergy) energyValues.push(parseInt(entry.exercise.eodEnergy));
+                });
+
+                const avgEnergy = energyValues.length > 0 ? 
+                    (energyValues.reduce((a, b) => a + b, 0) / energyValues.length).toFixed(1) : '-';
+                document.getElementById('averageEnergy').textContent = avgEnergy;
+            }
+
+            function displayRecentEntries() {
+                const container = document.getElementById('recentEntries');
+                const allEntries = [
+                    ...nutritionData.morning.map(entry => ({...entry, type: 'Morning'})),
+                    ...nutritionData.meals.map(entry => ({...entry, type: 'Meals'}))
+                ].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, 5);
+
+                container.innerHTML = '<h4>Recent Entries</h4>';
+                allEntries.forEach(entry => {
+                    const div = document.createElement('div');
+                    div.className = 'data-entry';
+                    div.innerHTML = `
+                        <div class="data-entry-date">${entry.type} - ${new Date(entry.timestamp).toLocaleDateString()}</div>
+                        <div>${entry.type === 'Morning' ? 
+                            `Energy: ${entry.morningEnergy || 'N/A'}, Weight: ${entry.weight || 'N/A'}` :
+                            `Breakfast: ${entry.meal1?.food || 'N/A'}`}</div>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            function displayPatterns() {
+                const container = document.getElementById('patternInsights');
+                container.innerHTML = '<h4>Pattern Insights</h4>';
+
+                // Analyze energy patterns
+                const energyData = nutritionData.morning.filter(entry => entry.morningEnergy).slice(-7);
+                if (energyData.length >= 3) {
+                    const avgEnergy = energyData.reduce((sum, entry) => sum + parseInt(entry.morningEnergy), 0) / energyData.length;
+                    const insight = document.createElement('div');
+                    insight.className = 'pattern-insight';
+                    insight.innerHTML = `📊 Your average morning energy over the last ${energyData.length} days is ${avgEnergy.toFixed(1)}/10`;
+                    container.appendChild(insight);
+                }
+
+                // Food response analysis
+                const mealData = nutritionData.meals.filter(entry => entry.meal1?.food && entry.meal1?.energy);
+                if (mealData.length >= 2) {
+                    const foodResponses = {};
+                    mealData.forEach(entry => {
+                        const food = entry.meal1.food.toLowerCase();
+                        const energy = parseInt(entry.meal1.energy);
+                        if (!foodResponses[food]) foodResponses[food] = [];
+                        foodResponses[food].push(energy);
+                    });
+
+                    Object.entries(foodResponses).forEach(([food, energies]) => {
+                        if (energies.length >= 2) {
+                            const avgEnergy = energies.reduce((a, b) => a + b) / energies.length;
+                            const responseDiv = document.createElement('div');
+                            responseDiv.className = avgEnergy >= 7 ? 'food-response-card' : 
+                                                   avgEnergy >= 5 ? 'food-response-card limit' : 'food-response-card avoid';
+                            responseDiv.innerHTML = `
+                                <strong>${food}</strong><br>
+                                Average energy response: ${avgEnergy.toFixed(1)}/10 (${energies.length} meals)
+                            `;
+                            container.appendChild(responseDiv);
+                        }
+                    });
+                }
+            }
+
+            // Export function
+            function exportToCSV() {
+                let csv = 'Date,Type,Data\n';
+                
+                nutritionData.morning.forEach(entry => {
+                    csv += `${entry.date},Morning,"Energy: ${entry.morningEnergy}, HRV: ${entry.hrv}, Weight: ${entry.weight}"\n`;
+                });
+                
+                nutritionData.meals.forEach(entry => {
+                    csv += `${entry.date},Meals,"Breakfast: ${entry.meal1?.food || 'N/A'}, Energy: ${entry.meal1?.energy || 'N/A'}"\n`;
+                });
+
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.setAttribute('hidden', '');
+                a.setAttribute('href', url);
+                a.setAttribute('download', `nutrition-data-${new Date().toISOString().split('T')[0]}.csv`);
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+
+            // Clear all data
+            function clearAllData() {
+                if (confirm('Are you sure you want to delete all your nutrition data? This cannot be undone.')) {
+                    nutritionData = { morning: [], meals: [], experiments: [] };
+                    saveData();
+                    updateDataSummary();
+                    displayRecentEntries();
+                    alert('All data has been cleared.');
+                }
+            }
+
+            function displayActiveExperiments() {
+                const container = document.getElementById('activeExperiments');
+                const activeExps = nutritionData.experiments.filter(exp => exp.status === 'active');
+                
+                container.innerHTML = '<h4>Active Experiments</h4>';
+                activeExps.forEach(exp => {
+                    const div = document.createElement('div');
+                    div.className = 'experiment-card';
+                    div.innerHTML = `
+                        <h5>${exp.name}</h5>
+                        <p><strong>Hypothesis:</strong> ${exp.hypothesis}</p>
+                        <p><strong>Duration:</strong> ${exp.duration} days</p>
+                        <p><strong>Variables:</strong> ${exp.variables}</p>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+        </script>
+    </body>
+</html>
                         <label>HRV (ms)</label>
                         <input type="number" id="hrv" placeholder="42">
                     </div>
@@ -446,6 +910,10 @@
 
         <!-- Meals Tab -->
         <div id="meals" class="tab-content">
+            <div class="success-message" id="mealSuccess">
+                ✅ Meal data saved successfully!
+            </div>
+            
             <div class="reminder-card">
                 <h4>🍽️ Meal Logging</h4>
                 <p>Rate energy 1hr after eating, satiety at 2hrs. Add glucose if using CGM.</p>
@@ -712,6 +1180,10 @@
 
         <!-- Experiments Tab -->
         <div id="experiments" class="tab-content">
+            <div class="success-message" id="experimentSuccess">
+                ✅ Experiment saved successfully!
+            </div>
+            
             <div class="reminder-card">
                 <h4>🧪 Nutrition Experiments</h4>
                 <p>Test hypotheses about your optimal nutrition systematically.</p>
@@ -727,27 +1199,4 @@
             </div>
             <div class="time-input">
                 <div class="form-group">
-                    <label>Start Date</label>
-                    <input type="date" id="experimentStart">
-                </div>
-                <div class="form-group">
-                    <label>Duration (days)</label>
-                    <input type="number" id="experimentDuration" placeholder="14">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Variables to Track</label>
-                <textarea id="experimentVariables" placeholder="e.g., HRV, energy, cravings, weight" rows="2"></textarea>
-            </div>
-
-            <button class="btn-primary" onclick="startExperiment()">Start Experiment</button>
-
-            <div id="activeExperiments"></div>
-            <div id="completedExperiments"></div>
-        </div>
-
-        <!-- Data Tab -->
-        <div id="data" class="tab-content">
-            <div class="data-summary">
-                <h3>📊 Your Nutrition Database</h3>
-                <p>Export, analyze, an
+                
