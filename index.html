@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Precision Nutrition Logger</title>
+    <title>Precision Medicine Food Log</title>
     <style>
         * {
             margin: 0;
@@ -37,13 +37,19 @@
         }
 
         .header h1 {
-            font-size: 24px;
+            font-size: 22px;
             margin-bottom: 5px;
+        }
+
+        .header .subtitle {
+            font-size: 12px;
+            opacity: 0.9;
         }
 
         .header .date {
             font-size: 14px;
             opacity: 0.9;
+            margin-top: 5px;
         }
 
         .nav-tabs {
@@ -55,15 +61,15 @@
 
         .nav-tab {
             flex: 1;
-            padding: 12px 8px;
+            padding: 10px 6px;
             text-align: center;
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
             transition: all 0.3s ease;
-            min-width: 80px;
+            min-width: 60px;
         }
 
         .nav-tab.active {
@@ -74,8 +80,8 @@
 
         .tab-content {
             display: none;
-            padding: 20px;
-            max-height: calc(100vh - 120px);
+            padding: 15px;
+            max-height: calc(100vh - 140px);
             overflow-y: auto;
         }
 
@@ -84,23 +90,23 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 600;
             color: #555;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 6px;
+            font-size: 14px;
             transition: border-color 0.3s ease;
         }
 
@@ -112,17 +118,17 @@
         .rating-buttons {
             display: grid;
             grid-template-columns: repeat(10, 1fr);
-            gap: 4px;
-            margin-top: 8px;
+            gap: 3px;
+            margin-top: 6px;
         }
 
         .rating-btn {
-            padding: 8px 4px;
+            padding: 6px 3px;
             border: 1px solid #e9ecef;
             background: white;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             transition: all 0.3s ease;
             text-align: center;
@@ -143,117 +149,204 @@
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 15px;
             transition: transform 0.2s ease;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
 
-        .reminder-card {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        .section {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
         }
 
-        .reminder-card h4 {
-            color: #155724;
-            margin-bottom: 8px;
+        .section h3 {
+            color: #4facfe;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .section h4 {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
         }
 
         .success-message {
             background: #d4edda;
             color: #155724;
-            padding: 10px;
+            padding: 8px;
             border-radius: 4px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-align: center;
             display: none;
-        }
-
-        .meal-section {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .meal-section h3 {
-            color: #4facfe;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-
-        .time-input {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            font-size: 12px;
         }
 
         .scale-info {
             background: #f8f9fa;
-            padding: 8px;
-            border-radius: 6px;
-            margin-top: 5px;
-            font-size: 11px;
+            padding: 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+            font-size: 10px;
             color: #666;
+        }
+
+        .reminder-card {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        .reminder-card h4 {
+            color: #1976d2;
+            margin-bottom: 6px;
+            font-size: 13px;
         }
 
         .data-summary {
             background: #e8f5e8;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
         }
 
         .data-summary h3 {
             color: #28a745;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 16px;
         }
 
         .export-btn {
             background: #28a745;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
+            padding: 10px 20px;
+            border-radius: 4px;
             cursor: pointer;
-            margin: 10px 5px;
-            font-size: 14px;
+            margin: 8px 4px;
+            font-size: 12px;
         }
 
         .data-entry {
             background: white;
-            padding: 10px;
+            padding: 8px;
             border-radius: 4px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             border-left: 3px solid #4facfe;
+            font-size: 11px;
+        }
+
+        .pattern-insight {
+            background: #fff8e1;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 3px solid #ff9800;
             font-size: 12px;
         }
 
-        .data-entry-date {
-            font-weight: bold;
-            color: #4facfe;
+        .glucose-readings {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .glucose-input {
+            text-align: center;
+        }
+
+        .glucose-input label {
+            font-size: 10px;
+            margin-bottom: 4px;
+        }
+
+        .glucose-input input {
+            padding: 6px 4px;
+            font-size: 12px;
+        }
+
+        .macro-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .experiment-card {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 3px solid #2196f3;
+            font-size: 12px;
+        }
+
+        .biomarker-section {
+            background: #f3e5f5;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .weekly-pattern {
+            background: #fff3e0;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
         }
 
         @media (max-width: 480px) {
             .rating-buttons {
                 grid-template-columns: repeat(5, 1fr);
-                gap: 6px;
+                gap: 4px;
             }
             
             .rating-btn {
-                padding: 10px 6px;
-                font-size: 12px;
+                padding: 8px 4px;
+                font-size: 11px;
+            }
+
+            .nav-tab {
+                font-size: 10px;
+                padding: 8px 4px;
+            }
+
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
             }
         }
     </style>
@@ -261,64 +354,122 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🥗 Precision Nutrition</h1>
+            <h1>🧬 Precision Medicine Food Log</h1>
+            <div class="subtitle">Based on individualized nutrition research</div>
             <div class="date" id="currentDate"></div>
         </div>
 
         <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showTab('morning')">Morning</button>
+            <button class="nav-tab active" onclick="showTab('baseline')">Baseline</button>
             <button class="nav-tab" onclick="showTab('meals')">Meals</button>
+            <button class="nav-tab" onclick="showTab('exercise')">Exercise</button>
+            <button class="nav-tab" onclick="showTab('patterns')">Patterns</button>
+            <button class="nav-tab" onclick="showTab('experiments')">Tests</button>
             <button class="nav-tab" onclick="showTab('data')">Data</button>
         </div>
 
-        <!-- Morning Tab -->
-        <div id="morning" class="tab-content active">
-            <div class="success-message" id="morningSuccess">
-                ✅ Morning data saved successfully!
+        <!-- Baseline Morning Data Tab -->
+        <div id="baseline" class="tab-content active">
+            <div class="success-message" id="baselineSuccess">
+                ✅ Baseline data saved successfully!
             </div>
             
             <div class="reminder-card">
-                <h4>🌅 Morning Checklist</h4>
-                <p>Log your overnight recovery data and plan your day!</p>
+                <h4>🌅 Daily Baseline Metrics</h4>
+                <p>Log your morning biomarkers and subjective measures for pattern recognition.</p>
             </div>
 
-            <div class="form-group">
-                <label>Wake Time</label>
-                <input type="time" id="wakeTime">
-            </div>
-
-            <div class="form-group">
-                <label>Morning Energy (1-10)</label>
-                <div class="rating-buttons" data-field="morningEnergy">
-                    <button class="rating-btn" data-value="1">1</button>
-                    <button class="rating-btn" data-value="2">2</button>
-                    <button class="rating-btn" data-value="3">3</button>
-                    <button class="rating-btn" data-value="4">4</button>
-                    <button class="rating-btn" data-value="5">5</button>
-                    <button class="rating-btn" data-value="6">6</button>
-                    <button class="rating-btn" data-value="7">7</button>
-                    <button class="rating-btn" data-value="8">8</button>
-                    <button class="rating-btn" data-value="9">9</button>
-                    <button class="rating-btn" data-value="10">10</button>
-                </div>
-                <div class="scale-info">1=Exhausted, 5=Neutral, 10=Peak energy</div>
-            </div>
-
-            <div class="meal-section">
-                <h3>📱 Health Data</h3>
-                <div class="time-input">
+            <div class="section">
+                <h3>Baseline Morning Data</h3>
+                <div class="grid-2">
                     <div class="form-group">
-                        <label>Weight (lbs)</label>
-                        <input type="number" step="0.1" id="weight" placeholder="165.2">
+                        <label>Wake Time</label>
+                        <input type="time" id="wakeTime">
                     </div>
                     <div class="form-group">
-                        <label>Sleep Hours</label>
-                        <input type="number" step="0.1" id="sleepHours" placeholder="7.5">
+                        <label>Training Day?</label>
+                        <select id="trainingDay">
+                            <option value="N">No</option>
+                            <option value="Y">Yes</option>
+                        </select>
                     </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Morning Weight (lbs)</label>
+                        <input type="number" step="0.1" id="morningWeight" placeholder="165.2">
+                    </div>
+                    <div class="form-group">
+                        <label>Fasting Glucose (mg/dL)</label>
+                        <input type="number" id="fastingGlucose" placeholder="95">
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>HRV (ms)</label>
+                        <input type="number" id="hrv" placeholder="42">
+                    </div>
+                    <div class="form-group">
+                        <label>Resting HR (bpm)</label>
+                        <input type="number" id="restingHR" placeholder="52">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Sleep Quality (1-10)</label>
+                    <div class="rating-buttons" data-field="sleepQuality">
+                        <button class="rating-btn" data-value="1">1</button>
+                        <button class="rating-btn" data-value="2">2</button>
+                        <button class="rating-btn" data-value="3">3</button>
+                        <button class="rating-btn" data-value="4">4</button>
+                        <button class="rating-btn" data-value="5">5</button>
+                        <button class="rating-btn" data-value="6">6</button>
+                        <button class="rating-btn" data-value="7">7</button>
+                        <button class="rating-btn" data-value="8">8</button>
+                        <button class="rating-btn" data-value="9">9</button>
+                        <button class="rating-btn" data-value="10">10</button>
+                    </div>
+                    <div class="scale-info">1=Terrible, 5=Average, 10=Perfect</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Energy Level (1-10)</label>
+                    <div class="rating-buttons" data-field="energyLevel">
+                        <button class="rating-btn" data-value="1">1</button>
+                        <button class="rating-btn" data-value="2">2</button>
+                        <button class="rating-btn" data-value="3">3</button>
+                        <button class="rating-btn" data-value="4">4</button>
+                        <button class="rating-btn" data-value="5">5</button>
+                        <button class="rating-btn" data-value="6">6</button>
+                        <button class="rating-btn" data-value="7">7</button>
+                        <button class="rating-btn" data-value="8">8</button>
+                        <button class="rating-btn" data-value="9">9</button>
+                        <button class="rating-btn" data-value="10">10</button>
+                    </div>
+                    <div class="scale-info">1=Exhausted, 5=Neutral, 10=Peak energy</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Mood (1-10)</label>
+                    <div class="rating-buttons" data-field="mood">
+                        <button class="rating-btn" data-value="1">1</button>
+                        <button class="rating-btn" data-value="2">2</button>
+                        <button class="rating-btn" data-value="3">3</button>
+                        <button class="rating-btn" data-value="4">4</button>
+                        <button class="rating-btn" data-value="5">5</button>
+                        <button class="rating-btn" data-value="6">6</button>
+                        <button class="rating-btn" data-value="7">7</button>
+                        <button class="rating-btn" data-value="8">8</button>
+                        <button class="rating-btn" data-value="9">9</button>
+                        <button class="rating-btn" data-value="10">10</button>
+                    </div>
+                    <div class="scale-info">1=Depressed, 5=Neutral, 10=Excellent</div>
                 </div>
             </div>
 
-            <button class="btn-primary" onclick="saveMorningData()">Save Morning Data</button>
+            <button class="btn-primary" onclick="saveBaselineData()">Save Baseline Data</button>
         </div>
 
         <!-- Meals Tab -->
@@ -328,25 +479,211 @@
             </div>
             
             <div class="reminder-card">
-                <h4>🍽️ Meal Logging</h4>
-                <p>Track what you eat and how it makes you feel!</p>
+                <h4>🍽️ Precision Meal Tracking</h4>
+                <p>Log detailed meal composition and individual responses for pattern analysis.</p>
             </div>
 
-            <div class="meal-section">
-                <h3>Breakfast</h3>
+            <div class="section">
+                <h3>Meal 1 - Breakfast</h3>
                 <div class="form-group">
-                    <label>Time</label>
-                    <input type="time" id="breakfastTime">
+                    <label>Meal Time</label>
+                    <input type="time" id="meal1Time">
                 </div>
                 
                 <div class="form-group">
-                    <label>Food Description</label>
-                    <textarea id="breakfastFood" placeholder="e.g., Greek yogurt with berries" rows="2"></textarea>
+                    <label>Foods & Portions</label>
+                    <textarea id="meal1Foods" placeholder="e.g., 1 cup Greek yogurt, 1/2 cup blueberries, 2 tbsp almonds" rows="2"></textarea>
+                </div>
+
+                <h4>Macros Estimate</h4>
+                <div class="macro-grid">
+                    <div class="form-group">
+                        <label>Protein (g)</label>
+                        <input type="number" id="meal1Protein" placeholder="25">
+                    </div>
+                    <div class="form-group">
+                        <label>Carbs (g)</label>
+                        <input type="number" id="meal1Carbs" placeholder="30">
+                    </div>
+                    <div class="form-group">
+                        <label>Fat (g)</label>
+                        <input type="number" id="meal1Fat" placeholder="15">
+                    </div>
+                    <div class="form-group">
+                        <label>Fiber (g)</label>
+                        <input type="number" id="meal1Fiber" placeholder="8">
+                    </div>
+                </div>
+
+                <h4>Context</h4>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Pre/Post Workout Timing</label>
+                        <select id="meal1WorkoutTiming">
+                            <option value="">No workout</option>
+                            <option value="pre">Before workout</option>
+                            <option value="post">After workout</option>
+                            <option value="both">Between workouts</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Eating Speed</label>
+                        <select id="meal1EatingSpeed">
+                            <option value="rushed">Rushed</option>
+                            <option value="normal">Normal</option>
+                            <option value="slow">Slow</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Energy 1hr Later (1-10)</label>
-                    <div class="rating-buttons" data-field="breakfastEnergy">
+                    <label>Hunger Level Before (1-10)</label>
+                    <div class="rating-buttons" data-field="meal1HungerBefore">
+                        <button class="rating-btn" data-value="1">1</button>
+                        <button class="rating-btn" data-value="2">2</button>
+                        <button class="rating-btn" data-value="3">3</button>
+                        <button class="rating-btn" data-value="4">4</button>
+                        <button class="rating-btn" data-value="5">5</button>
+                        <button class="rating-btn" data-value="6">6</button>
+                        <button class="rating-btn" data-value="7">7</button>
+                        <button class="rating-btn" data-value="8">8</button>
+                        <button class="rating-btn" data-value="9">9</button>
+                        <button class="rating-btn" data-value="10">10</button>
+                    </div>
+                    <div class="scale-info">1=Not hungry, 5=Moderate, 10=Starving</div>
+                </div>
+
+                <h4>Blood Glucose Response (CGM)</h4>
+                <div class="glucose-readings">
+                    <div class="glucose-input">
+                        <label>Pre-meal</label>
+                        <input type="number" id="meal1GlucosePre" placeholder="95">
+                    </div>
+                    <div class="glucose-input">
+                        <label>30 min</label>
+                        <input type="number" id="meal1Glucose30" placeholder="120">
+                    </div>
+                    <div class="glucose-input">
+                        <label>60 min</label>
+                        <input type="number" id="meal1Glucose60" placeholder="105">
+                    </div>
+                    <div class="glucose-input">
+                        <label>120 min</label>
+                        <input type="number" id="meal1Glucose120" placeholder="90">
+                    </div>
+                </div>
+
+                <h4>Individual Response Tracking</h4>
+                <div class="form-group">
+                    <label>Energy Level 1hr Post-Meal (1-10)</label>
+                    <div class="rating-buttons" data-field="meal1Energy">
+                        <button class="rating-btn" data-value="1">1</button>
+                        <button class="rating-btn" data-value="2">2</button>
+                        <button class="rating-btn" data-value="3">3</button>
+                        <button class="rating-btn" data-value="4">4</button>
+                        <button class="rating-btn" data-value="5">5</button>
+                        <button class="rating-btn" data-value="6">6</button>
+                        <button class="rating-btn" data-value="7">7</button>
+                        <button class="rating-btn" data-value="8">8</button>
+                        <button class="rating-btn" data-value="9">9</button>
+                        <button class="rating-btn" data-value="10">10</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Satiety 2hrs Post-Meal (1-10)</label>
+                    <div class="rating-buttons" data-field="meal1Satiety">
+                        <button class="rating-btn" data-value="1">1</button>
+                        <button class="rating-btn" data-value="2">2</button>
+                        <button class="rating-btn" data-value="3">3</button>
+                        <button class="rating-btn" data-value="4">4</button>
+                        <button class="rating-btn" data-value="5">5</button>
+                        <button class="rating-btn" data-value="6">6</button>
+                        <button class="rating-btn" data-value="7">7</button>
+                        <button class="rating-btn" data-value="8">8</button>
+                        <button class="rating-btn" data-value="9">9</button>
+                        <button class="rating-btn" data-value="10">10</button>
+                    </div>
+                    <div class="scale-info">1=Still hungry, 5=Satisfied, 10=Overfull</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Digestive Comfort (1-10)</label>
+                    <div class="rating-buttons" data-field="meal1Digestive">
+                        <button class="rating-btn" data-value="1">1</button>
+                        <button class="rating-btn" data-value="2">2</button>
+                        <button class="rating-btn" data-value="3">3</button>
+                        <button class="rating-btn" data-value="4">4</button>
+                        <button class="rating-btn" data-value="5">5</button>
+                        <button class="rating-btn" data-value="6">6</button>
+                        <button class="rating-btn" data-value="7">7</button>
+                        <button class="rating-btn" data-value="8">8</button>
+                        <button class="rating-btn" data-value="9">9</button>
+                        <button class="rating-btn" data-value="10">10</button>
+                    </div>
+                    <div class="scale-info">1=Very uncomfortable, 5=Normal, 10=Perfect</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Mental Clarity 1-2hrs Post (1-10)</label>
+                    <div class="rating-buttons" data-field="meal1Clarity">
+                        <button class="rating-btn" data-value="1">1</button>
+                        <button class="rating-btn" data-value="2">2</button>
+                        <button class="rating-btn" data-value="3">3</button>
+                        <button class="rating-btn" data-value="4">4</button>
+                        <button class="rating-btn" data-value="5">5</button>
+                        <button class="rating-btn" data-value="6">6</button>
+                        <button class="rating-btn" data-value="7">7</button>
+                        <button class="rating-btn" data-value="8">8</button>
+                        <button class="rating-btn" data-value="9">9</button>
+                        <button class="rating-btn" data-value="10">10</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Cravings within 3hrs</label>
+                    <select id="meal1Cravings">
+                        <option value="N">No cravings</option>
+                        <option value="Y-Sugar">Yes - Sugar/Sweet</option>
+                        <option value="Y-Salt">Yes - Salt/Savory</option>
+                        <option value="Y-Fat">Yes - Fat/Rich foods</option>
+                        <option value="Y-Carbs">Yes - Starchy carbs</option>
+                        <option value="Y-Other">Yes - Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Meal 2 - Lunch</h3>
+                <div class="form-group">
+                    <label>Meal Time</label>
+                    <input type="time" id="meal2Time">
+                </div>
+                
+                <div class="form-group">
+                    <label>Foods & Portions</label>
+                    <textarea id="meal2Foods" placeholder="e.g., Quinoa salad with chicken, vegetables, olive oil" rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Energy Level 1hr Post-Meal (1-10)</label>
+                    <div class="rating-buttons" data-field="meal2Energy">
+                        <button class="rating-btn" data-value="1">1</button>
+                        <button class="rating-btn" data-value="2">2</button>
+                        <button class="rating-btn" data-value="3">3</button>
+                        <button class="rating-btn" data-value="4">4</button>
+                        <button class="rating-btn" data-value="5">5</button>
+                        <button class="rating-btn" data-value="6">6</button>
+                        <button class="rating-btn" data-value="7">7</button>
+                        <button class="rating-btn" data-value="8">8</button>
+                        <button class="rating-btn" data-value="9">9</button>
+                        <button class="rating-btn" data-value="10">10</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Mental Clarity Post-Meal (1-10)</label>
+                    <div class="rating-buttons" data-field="meal2Clarity">
                         <button class="rating-btn" data-value="1">1</button>
                         <button class="rating-btn" data-value="2">2</button>
                         <button class="rating-btn" data-value="3">3</button>
@@ -361,31 +698,62 @@
                 </div>
             </div>
 
-            <div class="meal-section">
-                <h3>Lunch</h3>
+            <div class="section">
+                <h3>Meal 3 - Dinner</h3>
                 <div class="form-group">
-                    <label>Time</label>
-                    <input type="time" id="lunchTime">
+                    <label>Meal Time</label>
+                    <input type="time" id="meal3Time">
                 </div>
                 
                 <div class="form-group">
-                    <label>Food Description</label>
-                    <textarea id="lunchFood" placeholder="e.g., Salad with chicken" rows="2"></textarea>
+                    <label>Foods & Portions</label>
+                    <textarea id="meal3Foods" placeholder="e.g., Salmon, roasted vegetables, sweet potato" rows="2"></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label>Energy 1hr Later (1-10)</label>
-                    <div class="rating-buttons" data-field="lunchEnergy">
-                        <button class="rating-btn" data-value="1">1</button>
-                        <button class="rating-btn" data-value="2">2</button>
-                        <button class="rating-btn" data-value="3">3</button>
-                        <button class="rating-btn" data-value="4">4</button>
-                        <button class="rating-btn" data-value="5">5</button>
-                        <button class="rating-btn" data-value="6">6</button>
-                        <button class="rating-btn" data-value="7">7</button>
-                        <button class="rating-btn" data-value="8">8</button>
-                        <button class="rating-btn" data-value="9">9</button>
-                        <button class="rating-btn" data-value="10">10</button>
+                    <label>Sleep Impact</label>
+                    <select id="meal3SleepImpact">
+                        <option value="positive">Positive - Helped sleep</option>
+                        <option value="neutral">Neutral - No effect</option>
+                        <option value="negative">Negative - Disrupted sleep</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>End-of-Day Metrics</h3>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Overall Energy (1-10)</label>
+                        <div class="rating-buttons" data-field="overallEnergy">
+                            <button class="rating-btn" data-value="10">10</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Stress Level (1-10)</label>
+                        <div class="rating-buttons" data-field="stressLevel">
+                            <button class="rating-btn" data-value="1">1</button>
+                            <button class="rating-btn" data-value="2">2</button>
+                            <button class="rating-btn" data-value="3">3</button>
+                            <button class="rating-btn" data-value="4">4</button>
+                            <button class="rating-btn" data-value="5">5</button>
+                            <button class="rating-btn" data-value="6">6</button>
+                            <button class="rating-btn" data-value="7">7</button>
+                            <button class="rating-btn" data-value="8">8</button>
+                            <button class="rating-btn" data-value="9">9</button>
+                            <button class="rating-btn" data-value="10">10</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Water Intake (oz)</label>
+                        <input type="number" id="waterIntake" placeholder="64">
+                    </div>
+                    <div class="form-group">
+                        <label>Bowel Movement (Bristol 1-7)</label>
+                        <input type="number" min="1" max="7" id="bowelMovement" placeholder="4">
                     </div>
                 </div>
             </div>
@@ -393,30 +761,207 @@
             <button class="btn-primary" onclick="saveMealData()">Save Meal Data</button>
         </div>
 
+        <!-- Exercise Tab -->
+        <div id="exercise" class="tab-content">
+            <div class="success-message" id="exerciseSuccess">
+                ✅ Exercise data saved successfully!
+            </div>
+            
+            <div class="reminder-card">
+                <h4>🏃‍♀️ Exercise & Recovery Tracking</h4>
+                <p>Log training data and nutrition timing for performance optimization.</p>
+            </div>
+
+            <div class="section">
+                <h3>Exercise Data</h3>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Exercise Type</label>
+                        <select id="exerciseType">
+                            <option value="">No exercise</option>
+                            <option value="cardio">Cardio/Running</option>
+                            <option value="strength">Strength Training</option>
+                            <option value="hiit">HIIT</option>
+                            <option value="yoga">Yoga/Stretching</option>
+                            <option value="sports">Sports</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Duration (minutes)</label>
+                        <input type="number" id="exerciseDuration" placeholder="45">
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Exercise Time</label>
+                        <input type="time" id="exerciseTime">
+                    </div>
+                    <div class="form-group">
+                        <label>Recovery Heart Rate</label>
+                        <input type="number" id="recoveryHR" placeholder="120">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Exercise Intensity (1-10)</label>
+                    <div class="rating-buttons" data-field="exerciseIntensity">
+                        <button class="rating-btn" data-value="1">1</button>
+                        <button class="rating-btn" data-value="2">2</button>
+                        <button class="rating-btn" data-value="3">3</button>
+                        <button class="rating-btn" data-value="4">4</button>
+                        <button class="rating-btn" data-value="5">5</button>
+                        <button class="rating-btn" data-value="6">6</button>
+                        <button class="rating-btn" data-value="7">7</button>
+                        <button class="rating-btn" data-value="8">8</button>
+                        <button class="rating-btn" data-value="9">9</button>
+                        <button class="rating-btn" data-value="10">10</button>
+                    </div>
+                    <div class="scale-info">1=Very light, 5=Moderate, 10=Maximum effort</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Pre-workout Fuel</label>
+                    <textarea id="preWorkoutFuel" placeholder="e.g., Banana 30min before, black coffee" rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Performance Notes</label>
+                    <textarea id="performanceNotes" placeholder="e.g., Great energy, hit new PR, felt sluggish" rows="2"></textarea>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="saveExerciseData()">Save Exercise Data</button>
+        </div>
+
+        <!-- Patterns Tab -->
+        <div id="patterns" class="tab-content">
+            <div class="data-summary">
+                <h3>🔍 Pattern Recognition</h3>
+                <p>AI-powered insights from your personalized nutrition data.</p>
+            </div>
+
+            <div class="weekly-pattern">
+                <h4>📊 Weekly Pattern Analysis</h4>
+                <div id="weeklyPatterns"></div>
+            </div>
+
+            <div id="glucosePatterns"></div>
+            <div id="energyPatterns"></div>
+            <div id="foodSensitivities"></div>
+        </div>
+
+        <!-- Experiments Tab -->
+        <div id="experiments" class="tab-content">
+            <div class="success-message" id="experimentSuccess">
+                ✅ Experiment saved successfully!
+            </div>
+            
+            <div class="reminder-card">
+                <h4>🧪 Precision Medicine Experiments</h4>
+                <p>Design and track systematic nutrition experiments based on your biomarkers.</p>
+            </div>
+
+            <div class="section">
+                <h3>Current Experiment</h3>
+                <div class="form-group">
+                    <label>Experiment Name</label>
+                    <input type="text" id="experimentName" placeholder="e.g., Higher protein breakfast impact on HRV">
+                </div>
+                
+                <div class="form-group">
+                    <label>Hypothesis</label>
+                    <textarea id="experimentHypothesis" placeholder="e.g., Increasing breakfast protein to 35g will improve HRV and reduce afternoon cravings" rows="2"></textarea>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="experimentStart">
+                    </div>
+                    <div class="form-group">
+                        <label>Duration (days)</label>
+                        <input type="number" id="experimentDuration" placeholder="14">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Variables to Track</label>
+                    <textarea id="experimentVariables" placeholder="e.g., HRV, morning energy, 3pm cravings, glucose response" rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Baseline Measurements</label>
+                    <textarea id="experimentBaseline" placeholder="e.g., Current HRV: 42ms, Morning energy: 6/10" rows="2"></textarea>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="startExperiment()">Start Experiment</button>
+
+            <div class="biomarker-section">
+                <h4>🩸 Biomarker Tracking</h4>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>HbA1c (%)</label>
+                        <input type="number" step="0.1" id="hba1c" placeholder="5.4">
+                    </div>
+                    <div class="form-group">
+                        <label>CRP (mg/L)</label>
+                        <input type="number" step="0.1" id="crp" placeholder="0.8">
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>ApoB (mg/dL)</label>
+                        <input type="number" id="apoB" placeholder="90">
+                    </div>
+                    <div class="form-group">
+                        <label>Omega-3 Index (%)</label>
+                        <input type="number" step="0.1" id="omega3Index" placeholder="8.2">
+                    </div>
+                </div>
+            </div>
+
+            <div id="activeExperiments"></div>
+        </div>
+
         <!-- Data Tab -->
         <div id="data" class="tab-content">
             <div class="data-summary">
-                <h3>📊 Your Nutrition Database</h3>
-                <p>View and export your logged data.</p>
+                <h3>📊 Precision Medicine Database</h3>
+                <p>Export, analyze, and manage your comprehensive health data.</p>
             </div>
 
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="font-size: 24px; font-weight: bold; color: #4facfe;" id="totalEntries">0</div>
-                <div style="font-size: 12px; color: #666;">Total Entries</div>
+            <div class="grid-2" style="margin-bottom: 20px;">
+                <div style="text-align: center; background: white; padding: 15px; border-radius: 6px;">
+                    <div style="font-size: 24px; font-weight: bold; color: #4facfe;" id="totalEntries">0</div>
+                    <div style="font-size: 12px; color: #666;">Total Entries</div>
+                </div>
+                <div style="text-align: center; background: white; padding: 15px; border-radius: 6px;">
+                    <div style="font-size: 24px; font-weight: bold; color: #28a745;" id="avgGlucose">-</div>
+                    <div style="font-size: 12px; color: #666;">Avg Glucose</div>
+                </div>
             </div>
 
-            <button class="export-btn" onclick="exportToCSV()">📁 Export to CSV</button>
-            <button class="export-btn" onclick="clearAllData()" style="background: #dc3545;">🗑️ Clear All Data</button>
+            <div style="margin-bottom: 15px;">
+                <button class="export-btn" onclick="exportToCSV()">📁 Export Full Dataset</button>
+                <button class="export-btn" onclick="exportWeeklyReport()">📋 Weekly Report</button>
+                <button class="export-btn" onclick="clearAllData()" style="background: #dc3545;">🗑️ Clear All Data</button>
+            </div>
 
             <div id="recentEntries"></div>
         </div>
     </div>
 
     <script>
-        // Initialize the app
+        // Initialize comprehensive nutrition data structure
         let nutritionData = {
-            morning: [],
-            meals: []
+            baseline: [],
+            meals: [],
+            exercise: [],
+            experiments: [],
+            biomarkers: []
         };
 
         // Load existing data on startup
@@ -449,10 +994,13 @@
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
             
-            // Update data when viewing data tab
+            // Update data when viewing certain tabs
             if (tabName === 'data') {
                 updateDataSummary();
                 displayRecentEntries();
+            }
+            if (tabName === 'patterns') {
+                analyzePatterns();
             }
         }
 
@@ -475,21 +1023,26 @@
             }
         });
 
-        // Save morning data
-        function saveMorningData() {
-            const morningEntry = {
+        // Save baseline data
+        function saveBaselineData() {
+            const baselineEntry = {
                 date: new Date().toISOString().split('T')[0],
                 timestamp: new Date().toISOString(),
                 wakeTime: document.getElementById('wakeTime').value,
-                morningEnergy: getRatingValue('morningEnergy'),
-                weight: document.getElementById('weight').value,
-                sleepHours: document.getElementById('sleepHours').value
+                trainingDay: document.getElementById('trainingDay').value,
+                morningWeight: document.getElementById('morningWeight').value,
+                fastingGlucose: document.getElementById('fastingGlucose').value,
+                hrv: document.getElementById('hrv').value,
+                restingHR: document.getElementById('restingHR').value,
+                sleepQuality: getRatingValue('sleepQuality'),
+                energyLevel: getRatingValue('energyLevel'),
+                mood: getRatingValue('mood')
             };
 
-            nutritionData.morning.push(morningEntry);
+            nutritionData.baseline.push(baselineEntry);
             saveData();
-            showSuccess('morningSuccess');
-            clearMorningForm();
+            showSuccess('baselineSuccess');
+            clearBaselineForm();
         }
 
         // Save meal data
@@ -497,15 +1050,42 @@
             const mealEntry = {
                 date: new Date().toISOString().split('T')[0],
                 timestamp: new Date().toISOString(),
-                breakfast: {
-                    time: document.getElementById('breakfastTime').value,
-                    food: document.getElementById('breakfastFood').value,
-                    energy: getRatingValue('breakfastEnergy')
+                meal1: {
+                    time: document.getElementById('meal1Time').value,
+                    foods: document.getElementById('meal1Foods').value,
+                    protein: document.getElementById('meal1Protein').value,
+                    carbs: document.getElementById('meal1Carbs').value,
+                    fat: document.getElementById('meal1Fat').value,
+                    fiber: document.getElementById('meal1Fiber').value,
+                    workoutTiming: document.getElementById('meal1WorkoutTiming').value,
+                    eatingSpeed: document.getElementById('meal1EatingSpeed').value,
+                    hungerBefore: getRatingValue('meal1HungerBefore'),
+                    glucosePre: document.getElementById('meal1GlucosePre').value,
+                    glucose30: document.getElementById('meal1Glucose30').value,
+                    glucose60: document.getElementById('meal1Glucose60').value,
+                    glucose120: document.getElementById('meal1Glucose120').value,
+                    energy: getRatingValue('meal1Energy'),
+                    satiety: getRatingValue('meal1Satiety'),
+                    digestive: getRatingValue('meal1Digestive'),
+                    clarity: getRatingValue('meal1Clarity'),
+                    cravings: document.getElementById('meal1Cravings').value
                 },
-                lunch: {
-                    time: document.getElementById('lunchTime').value,
-                    food: document.getElementById('lunchFood').value,
-                    energy: getRatingValue('lunchEnergy')
+                meal2: {
+                    time: document.getElementById('meal2Time').value,
+                    foods: document.getElementById('meal2Foods').value,
+                    energy: getRatingValue('meal2Energy'),
+                    clarity: getRatingValue('meal2Clarity')
+                },
+                meal3: {
+                    time: document.getElementById('meal3Time').value,
+                    foods: document.getElementById('meal3Foods').value,
+                    sleepImpact: document.getElementById('meal3SleepImpact').value
+                },
+                endOfDay: {
+                    overallEnergy: getRatingValue('overallEnergy'),
+                    stressLevel: getRatingValue('stressLevel'),
+                    waterIntake: document.getElementById('waterIntake').value,
+                    bowelMovement: document.getElementById('bowelMovement').value
                 }
             };
 
@@ -513,6 +1093,55 @@
             saveData();
             showSuccess('mealSuccess');
             clearMealForm();
+        }
+
+        // Save exercise data
+        function saveExerciseData() {
+            const exerciseEntry = {
+                date: new Date().toISOString().split('T')[0],
+                timestamp: new Date().toISOString(),
+                type: document.getElementById('exerciseType').value,
+                duration: document.getElementById('exerciseDuration').value,
+                time: document.getElementById('exerciseTime').value,
+                intensity: getRatingValue('exerciseIntensity'),
+                recoveryHR: document.getElementById('recoveryHR').value,
+                preWorkoutFuel: document.getElementById('preWorkoutFuel').value,
+                performanceNotes: document.getElementById('performanceNotes').value
+            };
+
+            nutritionData.exercise.push(exerciseEntry);
+            saveData();
+            showSuccess('exerciseSuccess');
+            clearExerciseForm();
+        }
+
+        // Start experiment
+        function startExperiment() {
+            const experiment = {
+                id: Date.now(),
+                name: document.getElementById('experimentName').value,
+                hypothesis: document.getElementById('experimentHypothesis').value,
+                startDate: document.getElementById('experimentStart').value,
+                duration: document.getElementById('experimentDuration').value,
+                variables: document.getElementById('experimentVariables').value,
+                baseline: document.getElementById('experimentBaseline').value,
+                status: 'active',
+                createdAt: new Date().toISOString(),
+                biomarkers: {
+                    hba1c: document.getElementById('hba1c').value,
+                    crp: document.getElementById('crp').value,
+                    apoB: document.getElementById('apoB').value,
+                    omega3Index: document.getElementById('omega3Index').value
+                }
+            };
+
+            if (experiment.name && experiment.hypothesis) {
+                nutritionData.experiments.push(experiment);
+                saveData();
+                showSuccess('experimentSuccess');
+                clearExperimentForm();
+                displayActiveExperiments();
+            }
         }
 
         // Helper functions
@@ -529,20 +1158,38 @@
             }, 3000);
         }
 
-        function clearMorningForm() {
+        function clearBaselineForm() {
             document.getElementById('wakeTime').value = '';
-            document.getElementById('weight').value = '';
-            document.getElementById('sleepHours').value = '';
-            clearRatingButtons('morningEnergy');
+            document.getElementById('trainingDay').value = 'N';
+            document.getElementById('morningWeight').value = '';
+            document.getElementById('fastingGlucose').value = '';
+            document.getElementById('hrv').value = '';
+            document.getElementById('restingHR').value = '';
+            clearRatingButtons('sleepQuality');
+            clearRatingButtons('energyLevel');
+            clearRatingButtons('mood');
         }
 
         function clearMealForm() {
-            document.getElementById('breakfastTime').value = '';
-            document.getElementById('breakfastFood').value = '';
-            document.getElementById('lunchTime').value = '';
-            document.getElementById('lunchFood').value = '';
-            clearRatingButtons('breakfastEnergy');
-            clearRatingButtons('lunchEnergy');
+            // Clear all meal form inputs
+            const mealInputs = document.querySelectorAll('#meals input, #meals textarea, #meals select');
+            mealInputs.forEach(input => input.value = '');
+            
+            // Clear all rating buttons in meals tab
+            const mealRatingGroups = ['meal1HungerBefore', 'meal1Energy', 'meal1Satiety', 'meal1Digestive', 
+                                     'meal1Clarity', 'meal2Energy', 'meal2Clarity', 'overallEnergy', 'stressLevel'];
+            mealRatingGroups.forEach(group => clearRatingButtons(group));
+        }
+
+        function clearExerciseForm() {
+            const exerciseInputs = document.querySelectorAll('#exercise input, #exercise textarea, #exercise select');
+            exerciseInputs.forEach(input => input.value = '');
+            clearRatingButtons('exerciseIntensity');
+        }
+
+        function clearExperimentForm() {
+            const experimentInputs = document.querySelectorAll('#experiments input, #experiments textarea');
+            experimentInputs.forEach(input => input.value = '');
         }
 
         function clearRatingButtons(fieldName) {
@@ -557,7 +1204,7 @@
         // Data persistence functions
         function saveData() {
             try {
-                localStorage.setItem('nutritionTrackerData', JSON.stringify(nutritionData));
+                localStorage.setItem('precisionNutritionData', JSON.stringify(nutritionData));
             } catch (error) {
                 console.error('Error saving data:', error);
                 alert('Error saving data. Your browser may not support data storage.');
@@ -566,53 +1213,148 @@
 
         function loadData() {
             try {
-                const saved = localStorage.getItem('nutritionTrackerData');
+                const saved = localStorage.getItem('precisionNutritionData');
                 if (saved) {
                     nutritionData = JSON.parse(saved);
                 }
             } catch (error) {
                 console.error('Error loading data:', error);
-                nutritionData = { morning: [], meals: [] };
+                nutritionData = { baseline: [], meals: [], exercise: [], experiments: [], biomarkers: [] };
             }
         }
 
-        // Data display functions
+        // Data analysis functions
         function updateDataSummary() {
-            const totalEntries = nutritionData.morning.length + nutritionData.meals.length;
+            const totalEntries = nutritionData.baseline.length + nutritionData.meals.length + nutritionData.exercise.length;
             document.getElementById('totalEntries').textContent = totalEntries;
+
+            // Calculate average glucose
+            let glucoseValues = [];
+            nutritionData.baseline.forEach(entry => {
+                if (entry.fastingGlucose) glucoseValues.push(parseInt(entry.fastingGlucose));
+            });
+            nutritionData.meals.forEach(entry => {
+                if (entry.meal1?.glucosePre) glucoseValues.push(parseInt(entry.meal1.glucosePre));
+            });
+
+            const avgGlucose = glucoseValues.length > 0 ? 
+                (glucoseValues.reduce((a, b) => a + b, 0) / glucoseValues.length).toFixed(0) : '-';
+            document.getElementById('avgGlucose').textContent = avgGlucose;
         }
 
         function displayRecentEntries() {
             const container = document.getElementById('recentEntries');
             const allEntries = [
-                ...nutritionData.morning.map(entry => ({...entry, type: 'Morning'})),
-                ...nutritionData.meals.map(entry => ({...entry, type: 'Meals'}))
+                ...nutritionData.baseline.map(entry => ({...entry, type: 'Baseline'})),
+                ...nutritionData.meals.map(entry => ({...entry, type: 'Meals'})),
+                ...nutritionData.exercise.map(entry => ({...entry, type: 'Exercise'}))
             ].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, 5);
 
             container.innerHTML = '<h4>Recent Entries</h4>';
             allEntries.forEach(entry => {
                 const div = document.createElement('div');
                 div.className = 'data-entry';
+                let content = '';
+                
+                if (entry.type === 'Baseline') {
+                    content = `Energy: ${entry.energyLevel || 'N/A'}, HRV: ${entry.hrv || 'N/A'}, Weight: ${entry.morningWeight || 'N/A'}`;
+                } else if (entry.type === 'Meals') {
+                    content = `Breakfast: ${entry.meal1?.foods || 'N/A'}, Energy: ${entry.meal1?.energy || 'N/A'}`;
+                } else if (entry.type === 'Exercise') {
+                    content = `${entry.type || 'N/A'} - ${entry.duration || 'N/A'}min, Intensity: ${entry.intensity || 'N/A'}`;
+                }
+                
                 div.innerHTML = `
-                    <div class="data-entry-date">${entry.type} - ${new Date(entry.timestamp).toLocaleDateString()}</div>
-                    <div>${entry.type === 'Morning' ? 
-                        `Energy: ${entry.morningEnergy || 'N/A'}, Weight: ${entry.weight || 'N/A'}` :
-                        `Breakfast: ${entry.breakfast?.food || 'N/A'}`}</div>
+                    <div style="font-weight: bold; color: #4facfe;">${entry.type} - ${new Date(entry.timestamp).toLocaleDateString()}</div>
+                    <div>${content}</div>
                 `;
                 container.appendChild(div);
             });
         }
 
-        // Export function
-        function exportToCSV() {
-            let csv = 'Date,Type,Data\n';
+        function analyzePatterns() {
+            const patternsContainer = document.getElementById('weeklyPatterns');
+            patternsContainer.innerHTML = '';
+
+            // Glucose pattern analysis
+            const glucoseContainer = document.getElementById('glucosePatterns');
+            glucoseContainer.innerHTML = '<h4>🩸 Glucose Response Patterns</h4>';
             
-            nutritionData.morning.forEach(entry => {
-                csv += `${entry.date},Morning,"Energy: ${entry.morningEnergy}, Weight: ${entry.weight}"\n`;
+            const mealsWithGlucose = nutritionData.meals.filter(m => m.meal1?.glucosePre && m.meal1?.glucose120);
+            if (mealsWithGlucose.length >= 3) {
+                const avgSpike = mealsWithGlucose.reduce((sum, meal) => {
+                    const spike = parseInt(meal.meal1.glucose60) - parseInt(meal.meal1.glucosePre);
+                    return sum + spike;
+                }, 0) / mealsWithGlucose.length;
+
+                const insight = document.createElement('div');
+                insight.className = 'pattern-insight';
+                insight.innerHTML = `📊 Your average glucose spike is ${avgSpike.toFixed(0)} mg/dL. Target: <30 mg/dL for optimal metabolic health.`;
+                glucoseContainer.appendChild(insight);
+            }
+
+            // Energy pattern analysis
+            const energyContainer = document.getElementById('energyPatterns');
+            energyContainer.innerHTML = '<h4>⚡ Energy Response Patterns</h4>';
+            
+            const energyData = nutritionData.baseline.filter(b => b.energyLevel).slice(-7);
+            if (energyData.length >= 3) {
+                const avgEnergy = energyData.reduce((sum, entry) => sum + parseInt(entry.energyLevel), 0) / energyData.length;
+                const insight = document.createElement('div');
+                insight.className = 'pattern-insight';
+                insight.innerHTML = `📈 Your 7-day average morning energy is ${avgEnergy.toFixed(1)}/10. ${avgEnergy >= 7 ? 'Excellent!' : avgEnergy >= 5 ? 'Good baseline.' : 'Consider sleep and nutrition optimization.'}`;
+                energyContainer.appendChild(insight);
+            }
+
+            // Food sensitivity analysis
+            const sensitivityContainer = document.getElementById('foodSensitivities');
+            sensitivityContainer.innerHTML = '<h4>🚨 Potential Food Sensitivities</h4>';
+            
+            const lowEnergyMeals = nutritionData.meals.filter(m => m.meal1?.energy && parseInt(m.meal1.energy) <= 4);
+            if (lowEnergyMeals.length > 0) {
+                const insight = document.createElement('div');
+                insight.className = 'pattern-insight';
+                insight.style.borderLeftColor = '#dc3545';
+                insight.innerHTML = `⚠️ ${lowEnergyMeals.length} meals resulted in low energy (≤4/10). Review these meals for potential triggers.`;
+                sensitivityContainer.appendChild(insight);
+            }
+        }
+
+        function displayActiveExperiments() {
+            const container = document.getElementById('activeExperiments');
+            const activeExps = nutritionData.experiments.filter(exp => exp.status === 'active');
+            
+            if (activeExps.length > 0) {
+                container.innerHTML = '<h4>Active Experiments</h4>';
+                activeExps.forEach(exp => {
+                    const div = document.createElement('div');
+                    div.className = 'experiment-card';
+                    div.innerHTML = `
+                        <h5>${exp.name}</h5>
+                        <p><strong>Hypothesis:</strong> ${exp.hypothesis}</p>
+                        <p><strong>Duration:</strong> ${exp.duration} days</p>
+                        <p><strong>Variables:</strong> ${exp.variables}</p>
+                        <p><strong>Baseline:</strong> ${exp.baseline}</p>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+        }
+
+        // Export functions
+        function exportToCSV() {
+            let csv = 'Date,Type,Details\n';
+            
+            nutritionData.baseline.forEach(entry => {
+                csv += `${entry.date},Baseline,"Wake: ${entry.wakeTime}, Energy: ${entry.energyLevel}, HRV: ${entry.hrv}, Weight: ${entry.morningWeight}"\n`;
             });
             
             nutritionData.meals.forEach(entry => {
-                csv += `${entry.date},Meals,"Breakfast: ${entry.breakfast?.food || 'N/A'}"\n`;
+                csv += `${entry.date},Meals,"Breakfast: ${entry.meal1?.foods || 'N/A'}, Energy: ${entry.meal1?.energy || 'N/A'}, Glucose Spike: ${entry.meal1?.glucose60 && entry.meal1?.glucosePre ? parseInt(entry.meal1.glucose60) - parseInt(entry.meal1.glucosePre) : 'N/A'}"\n`;
+            });
+
+            nutritionData.exercise.forEach(entry => {
+                csv += `${entry.date},Exercise,"${entry.type} - ${entry.duration}min, Intensity: ${entry.intensity}, Performance: ${entry.performanceNotes}"\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv' });
@@ -620,7 +1362,36 @@
             const a = document.createElement('a');
             a.setAttribute('hidden', '');
             a.setAttribute('href', url);
-            a.setAttribute('download', `nutrition-data-${new Date().toISOString().split('T')[0]}.csv`);
+            a.setAttribute('download', `precision-nutrition-data-${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function exportWeeklyReport() {
+            // Generate a comprehensive weekly analysis report
+            const lastWeek = nutritionData.baseline.slice(-7);
+            let report = 'PRECISION NUTRITION WEEKLY REPORT\n';
+            report += `Generated: ${new Date().toLocaleDateString()}\n\n`;
+            
+            if (lastWeek.length > 0) {
+                const avgEnergy = lastWeek.reduce((sum, day) => sum + (parseInt(day.energyLevel) || 0), 0) / lastWeek.length;
+                const avgHRV = lastWeek.filter(d => d.hrv).reduce((sum, day) => sum + parseInt(day.hrv), 0) / lastWeek.filter(d => d.hrv).length;
+                
+                report += `WEEKLY AVERAGES:\n`;
+                report += `Morning Energy: ${avgEnergy.toFixed(1)}/10\n`;
+                report += `HRV: ${avgHRV ? avgHRV.toFixed(0) + 'ms' : 'N/A'}\n\n`;
+            }
+            
+            report += 'DETAILED DATA:\n';
+            report += JSON.stringify(nutritionData, null, 2);
+
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `weekly-nutrition-report-${new Date().toISOString().split('T')[0]}.txt`);
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -628,8 +1399,8 @@
 
         // Clear all data
         function clearAllData() {
-            if (confirm('Are you sure you want to delete all your nutrition data? This cannot be undone.')) {
-                nutritionData = { morning: [], meals: [] };
+            if (confirm('Are you sure you want to delete all your precision nutrition data? This cannot be undone.')) {
+                nutritionData = { baseline: [], meals: [], exercise: [], experiments: [], biomarkers: [] };
                 saveData();
                 updateDataSummary();
                 displayRecentEntries();
@@ -638,4 +1409,13 @@
         }
     </script>
 </body>
-</html>
+</html>="1">1</button>
+                            <button class="rating-btn" data-value="2">2</button>
+                            <button class="rating-btn" data-value="3">3</button>
+                            <button class="rating-btn" data-value="4">4</button>
+                            <button class="rating-btn" data-value="5">5</button>
+                            <button class="rating-btn" data-value="6">6</button>
+                            <button class="rating-btn" data-value="7">7</button>
+                            <button class="rating-btn" data-value="8">8</button>
+                            <button class="rating-btn" data-value="9">9</button>
+                            <button class="rating-btn" data-value
